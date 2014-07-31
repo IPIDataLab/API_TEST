@@ -8,7 +8,7 @@ var express		= require('express'); 		// call express
 var app			= express(); 				// define our app using express
 var bodyParser  = require('body-parser');
 var mongoose	= require('mongoose');		// Create connetion to mongodb
-mongoose.connect('mongodb://node:node@localhost:27017');
+mongoose.connect('mongodb://localhost:27017/pppDB');
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -40,7 +40,6 @@ router.get('/', function(req, res) {
 router.route('/countries')
 	// get all the bears (accessed at GET http://localhost:8080/api/bears)
 	.get(function(req, res) {
-
 		Country.find(function(err, countries) {
 			if (err)
 				res.send(err);
