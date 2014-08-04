@@ -1,4 +1,4 @@
-// ap/models/countries.js
+// app/models/countries.js
 
 var mongoose		= require('mongoose');
 var Schema			= mongoose.Schema;

@@ -16,6 +16,7 @@ app.use(bodyParser());
 
 // import models
 var Country		= require('./app/models/country')
+var Contribution = require('./app/models/contributions')
 
 var port = process.env.PORT || 8080; 		// set our port
 
@@ -38,7 +39,7 @@ router.get('/', function(req, res) {
 
 // define routes for countries collection
 router.route('/countries')
-	// get all the bears (accessed at GET http://localhost:8080/api/bears)
+	// get all the countries (accessed at GET http://localhost:8080/api/countries)
 	.get(function(req, res) {
 		Country.find(function(err, countries) {
 			if (err)
@@ -52,8 +53,8 @@ router.route('/countries')
 // ----------------------------------------------------
 router.route('/countries/:country_id')
 
-	// get the bear with that id (accessed at GET http://localhost:8080/api/bears/:bear_id)
-	.get(function(req, res, params) {
+	// get the country with a given ISO3 country id (accessed at GET http://localhost:8080/api/countries/:country_id)
+	.get(function(req, res) {
 		req.params.country_id = req.params.country_id.toUpperCase();
 		return Country.find(req.params, function(err, country) {
 			if(!err) {
@@ -63,6 +64,35 @@ router.route('/countries/:country_id')
 			}
 		});
 	});
+
+// define routes for contributions collection
+router.route('/contributions')
+	// get all the contributions (accessed at GET http://localhost:8080/api/contributions)
+	.get(function(req, res) {
+		Contribution.find(function(err, contributions) {
+			if (err)
+				res.send(err);
+
+			res.send(contributions);
+		});
+	});
+
+// on routes that end in /countries/:country_id
+// ----------------------------------------------------
+router.route('/contributions/:country')
+
+	// get all the contributions from a given country (accessed at GET http://localhost:8080/api/contributions/:country)
+	.get(function(req, res) {
+		req.params.country = req.params.country.toUpperCase();
+		return Contribution.find(req.params, function(err, contribution) {
+			if(!err) {
+				res.json(contribution);
+			}else{
+				return console.log(err);
+			}
+		});
+	});
+
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
