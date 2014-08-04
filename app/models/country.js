@@ -37,4 +37,5 @@ var CountrySchema	= new Schema({
 	arab_league: Boolean
 });
 
-module.exports		= mongoose.model('Country', CountrySchema);
+var collectionName = 'countries';
+module.exports		= mongoose.model('Country', CountrySchema, collectionName);

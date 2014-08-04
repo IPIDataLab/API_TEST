@@ -8,7 +8,7 @@ var express		= require('express'); 		// call express
 var app			= express(); 				// define our app using express
 var bodyParser  = require('body-parser');
 var mongoose	= require('mongoose');		// Create connetion to mongodb
-mongoose.connect('mongodb://localhost:27017/pppDB');
+var connect		= mongoose.connect('mongodb://localhost:27017/pppDB');
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -44,12 +44,25 @@ router.route('/countries')
 			if (err)
 				res.send(err);
 
-			res.json(countries);
+			res.send(countries);
 		});
 	});
 
+// on routes that end in /countries/:country_id
+// ----------------------------------------------------
+router.route('/countries/:country_id')
 
-// more routes for our API will happen here
+	// get the bear with that id (accessed at GET http://localhost:8080/api/bears/:bear_id)
+	.get(function(req, res, params) {
+		req.params.country_id = req.params.country_id.toUpperCase();
+		return Country.find(req.params, function(err, country) {
+			if(!err) {
+				res.json(country);
+			}else{
+				return console.log(err);
+			}
+		});
+	});
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
