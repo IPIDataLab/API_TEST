@@ -41,7 +41,7 @@ router.get('/', function(req, res) {
 
 // test mongoose query route using contribution collection
 router.route('/search')
-	// search contributions based on query params (accessed at GET http://localhost:8080/api/search?...)
+	// search contributions based on query params (accessed at GET http://localhost:8080/ppp_api/search?...)
 
 	//GET REQUEST
 	.get(function(req, res) {
@@ -102,7 +102,7 @@ router.route('/search')
 
 // define routes for countries collection
 router.route('/countries')
-	// get all the countries (accessed at GET http://localhost:8080/api/countries)
+	// get all the countries (accessed at GET http://localhost:8080/ppp_api/countries)
 	.get(function(req, res) {
 		Country.find(function(err, countries) {
 			if (err)
@@ -116,7 +116,7 @@ router.route('/countries')
 // ----------------------------------------------------
 router.route('/countries/:country_id')
 
-	// get the country with a given ISO3 country id (accessed at GET http://localhost:8080/api/countries/:country_id)
+	// get the country with a given ISO3 country id (accessed at GET http://localhost:8080/ppp_api/countries/:country_id)
 	.get(function(req, res) {
 		req.params.country_id = req.params.country_id.toUpperCase();
 		Country.find(req.params, function(err, country) {
@@ -130,7 +130,7 @@ router.route('/countries/:country_id')
 
 // define routes for contributions collection
 router.route('/contributions')
-	// get all the contributions (accessed at GET http://localhost:8080/api/contributions)
+	// get all the contributions (accessed at GET http://localhost:8080/ppp_api/contributions)
 	.get(function(req, res) {
 		Contribution.find(function(err, contributions) {
 			if (err)
@@ -144,7 +144,7 @@ router.route('/contributions')
 // ----------------------------------------------------
 router.route('/contributions/:country')
 
-	// get all the contributions from a given country (accessed at GET http://localhost:8080/api/contributions/:country)
+	// get all the contributions from a given country (accessed at GET http://localhost:8080/ppp_api/contributions/:country)
 	.get(function(req, res) {
 		req.params.country = req.params.country.toUpperCase();
 		Contribution.find(req.params, function(err, contribution) {
@@ -163,7 +163,7 @@ router.route('/contributions/:country')
 
 // define routes for missions collection
 router.route('/missions')
-	// get all the missions (accessed at GET http://localhost:8080/api/missions)
+	// get all the missions (accessed at GET http://localhost:8080/ppp_api/missions)
 	.get(function(req, res) {
 		Mission.find(function(err, missions) {
 			if (err)
@@ -176,7 +176,7 @@ router.route('/missions')
 // ----------------------------------------------------
 router.route('/missions/:mission')
 
-	// get the country with a given ISO3 country id (accessed at GET http://localhost:8080/api/missions/:mission)
+	// get the country with a given ISO3 country id (accessed at GET http://localhost:8080/ppp_api/missions/:mission)
 	.get(function(req, res) {
 		req.params.mission = req.params.mission.toUpperCase();
 		Mission.find(req.params, function(err, mission) {
@@ -197,7 +197,7 @@ router.route('/missions/:mission')
 // ----------------------------------------------------
 router.route('/aggregates/:cont_type')
 
-	// get all the contributions from a given country (accessed at GET http://localhost:8080/api/aggregates/:cont_type)
+	// get all the contributions from a given country (accessed at GET http://localhost:8080/ppp_api/aggregates/:cont_type)
 	.get(function(req, res) {
 		req.params.cont_type = req.params.cont_type.toLowerCase();
 		Aggregate.find(req.params, function(err, aggregate) {
@@ -217,7 +217,7 @@ router.route('/aggregates/:cont_type')
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
-app.use('/api', router);
+app.use('/ppp_api', router);
 
 // START THE SERVER
 // =============================================================================
