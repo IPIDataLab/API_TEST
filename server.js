@@ -15,8 +15,10 @@ var connect		= mongoose.connect('mongodb://localhost:27017/pppDB');
 app.use(bodyParser());
 
 // import models
-var Country		= require('./app/models/country')
-var Contribution = require('./app/models/contributions')
+var Country			= require('./app/models/countries')
+var Contribution 	= require('./app/models/contributions')
+var Mission 		= require('./app/models/missions')
+var Aggregate 		= require('./app/models/aggregates')
 
 var port = process.env.PORT || 8080; 		// set our port
 
@@ -27,7 +29,7 @@ var router = express.Router(); 				// get an instance of the express Router
 // middleware to use for all requests
 router.use(function(req, res, next) {
 	// do logging
-	console.log('Something is happening.');
+	console.log('Serving up ' + req.url);
 	next(); // make sure we go to the next routes and don't stop here
 });
 
@@ -36,6 +38,44 @@ router.use(function(req, res, next) {
 router.get('/', function(req, res) {
 	res.json({ message: 'hooray! welcome to our api!' });	
 });
+
+// test mongoose query route using contribution collection
+router.route('/search')
+	// get all the contributions (accessed at GET http://localhost:8080/api/contributions)
+
+	//GET REQUEST
+	.get(function(req, res) {
+		//QUERY DEFINITION
+		function getCountryArray(req) {
+			var query = Country.find(req.query, 'country_id un_region');
+			return query;
+		}
+
+		//ASSING QUERY TO VARIABLE
+		var queryArray = getCountryArray(req);
+
+		//EXECUTE QUERY
+		queryArray.exec(function(err,countries){
+			//INITIALIZE EMPTY ARRAY
+			var test = [];
+			//ERR CATCHING
+			if(err)
+				return console.log(err);
+			//ITERATE THROUGH EACH QUER RESULT AND ADD ID TO ARRAY
+			countries.forEach(function(country){
+				test.push(country.country_id);
+			});
+
+			Contribution.find({country : {$in : test}}, function(err, contribution) {
+				if(!err) {
+					res.json(contribution);
+				}else{
+					return console.log(err);
+				}
+			});
+		});
+	});
+
 
 // define routes for countries collection
 router.route('/countries')
@@ -56,7 +96,7 @@ router.route('/countries/:country_id')
 	// get the country with a given ISO3 country id (accessed at GET http://localhost:8080/api/countries/:country_id)
 	.get(function(req, res) {
 		req.params.country_id = req.params.country_id.toUpperCase();
-		return Country.find(req.params, function(err, country) {
+		Country.find(req.params, function(err, country) {
 			if(!err) {
 				res.json(country);
 			}else{
@@ -84,7 +124,7 @@ router.route('/contributions/:country')
 	// get all the contributions from a given country (accessed at GET http://localhost:8080/api/contributions/:country)
 	.get(function(req, res) {
 		req.params.country = req.params.country.toUpperCase();
-		return Contribution.find(req.params, function(err, contribution) {
+		Contribution.find(req.params, function(err, contribution) {
 			if(!err) {
 				res.json(contribution);
 			}else{
@@ -92,6 +132,64 @@ router.route('/contributions/:country')
 			}
 		});
 	});
+/////////////////////////////////////
+///DEFINE A ROUTE THAT RETURNS AN ARRAY
+///ALL COUNTRIES THAT HAVE CONTRIBUTED
+///TO PEACEKEEPING
+/////////////////////////////////////
+
+// define routes for missions collection
+router.route('/missions')
+	// get all the missions (accessed at GET http://localhost:8080/api/missions)
+	.get(function(req, res) {
+		Mission.find(function(err, missions) {
+			if (err)
+				res.send(err);
+			res.send(missions);
+		});
+	});
+
+// on routes that end in /missions/:mission_id
+// ----------------------------------------------------
+router.route('/missions/:mission')
+
+	// get the country with a given ISO3 country id (accessed at GET http://localhost:8080/api/missions/:mission)
+	.get(function(req, res) {
+		req.params.mission = req.params.mission.toUpperCase();
+		Mission.find(req.params, function(err, mission) {
+			if(!err) {
+				res.json(mission);
+			}else{
+				return console.log(err);
+			}
+		});
+	});
+
+/////////////////////////////////////
+///DEFINE A ROUTE THAT RETURNS AN ARRAY
+///ALL MISSIONS
+/////////////////////////////////////
+
+// Define aggregate route for each type
+// ----------------------------------------------------
+router.route('/aggregates/:cont_type')
+
+	// get all the contributions from a given country (accessed at GET http://localhost:8080/api/aggregates/:cont_type)
+	.get(function(req, res) {
+		req.params.cont_type = req.params.cont_type.toLowerCase();
+		Aggregate.find(req.params, function(err, aggregate) {
+			if(!err) {
+				res.json(aggregate);
+			}else{
+				return console.log(err);
+			}
+		});
+	});
+
+/////////////////////////////////////
+///DEFINE A ROUTE THAT RETURNS AN ARRAY
+///CONTRIBUTION TYPES
+/////////////////////////////////////
 
 
 // REGISTER OUR ROUTES -------------------------------
