@@ -41,32 +41,55 @@ router.get('/', function(req, res) {
 
 // test mongoose query route using contribution collection
 router.route('/search')
-	// get all the contributions (accessed at GET http://localhost:8080/api/contributions)
+	// search contributions based on query params (accessed at GET http://localhost:8080/api/search?...)
 
 	//GET REQUEST
 	.get(function(req, res) {
-		//QUERY DEFINITION
-		function getCountryArray(req) {
-			var query = Country.find(req.query, 'country_id un_region');
+		
+		//Parses query to return main query terms
+		function parseQuery(req) {
+			var mainQuery = {};
+			for(key in req.query) {
+				mainQuery[key] = req.query[key];
+			}
+			delete mainQuery.date;
+			return mainQuery;
+		}
+
+		//Parses query to return date query
+		function getDateQuery(req) {
+			if('date' in req.query) {
+				var dateQuery = req.query.date;
+			}
+			return dateQuery;
+		}
+
+		//Get's array of countries that match main query terms
+		function getCountryArray(query) {
+			var query = Country.find(query, 'country_id');
 			return query;
 		}
 
+		var mainQuery = parseQuery(req);
+		var dateQuery = getDateQuery(req);
+
+
 		//ASSING QUERY TO VARIABLE
-		var queryArray = getCountryArray(req);
+		var queryArray = getCountryArray(mainQuery);
 
 		//EXECUTE QUERY
 		queryArray.exec(function(err,countries){
 			//INITIALIZE EMPTY ARRAY
-			var test = [];
+			var countries = [];
 			//ERR CATCHING
 			if(err)
 				return console.log(err);
 			//ITERATE THROUGH EACH QUER RESULT AND ADD ID TO ARRAY
 			countries.forEach(function(country){
-				test.push(country.country_id);
+				countries.push(country.country_id);
 			});
 
-			Contribution.find({country : {$in : test}}, function(err, contribution) {
+			Contribution.find({country : {$in : countries}}, function(err, contribution) {
 				if(!err) {
 					res.json(contribution);
 				}else{
