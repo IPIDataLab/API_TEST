@@ -14,7 +14,7 @@ This is a test API deployment for the Providing for Peacekeeping Database. The a
 *	**ppp_api/search?...** allows for querying on basic contributor group membership. Queries "countries" collection to return an array of countries matching search criteria and applies that array to a query on the contributions collection.
 
 
-Dependancies
+Dependencies
 ------------
 *	[Express](https://www.npmjs.org/package/express "Express") - web framework
 *	[Mongoose](https://www.npmjs.org/package/mongoose "Mongoose") - MongoDB connector
@@ -28,3 +28,21 @@ Planned Functionality
 *	Search by date or range
 *	Search by specific mission contributed to
 *	search for records with specific types of contributions
+
+
+Install & launch
+-----------------
+
+Install mongodb on Mac OSX, for example with `brew install mongodb`, then follow the instructions
+
+> To have launchd start mongodb at login:
+    ln -sfv /usr/local/opt/mongodb/*.plist ~/Library/LaunchAgents
+Then to load mongodb now:
+    launchctl load ~/Library/LaunchAgents/homebrew.mxcl.mongodb.plist
+Or, if you don't want/need launchctl, you can just run:
+    mongod --config /usr/local/etc/mongod.conf
+
+To launch:
+`node server.js`
+and click on the URL provided.
+
