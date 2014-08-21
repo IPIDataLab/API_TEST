@@ -7,8 +7,12 @@
 var express		= require('express'); 		// call express
 var app			= express(); 				// define our app using express
 var bodyParser  = require('body-parser');
-var mongoose	= require('mongoose');		// Create connetion to mongodb
+var mongoose	= require('mongoose');		// Create connection to mongodb
+
+// configuration
 var connect		= mongoose.connect('mongodb://localhost:27017/pppDB');
+var port = process.env.PORT || 8080; 		// set our port
+var prefix = '/ppp_api';					// route prefix
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -20,7 +24,6 @@ var Contribution 	= require('./app/models/contributions')
 var Mission 		= require('./app/models/missions')
 var Aggregate 		= require('./app/models/aggregates')
 
-var port = process.env.PORT || 8080; 		// set our port
 
 // ROUTES FOR OUR API
 // =============================================================================
@@ -217,9 +220,11 @@ router.route('/aggregates/:cont_type')
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
-app.use('/ppp_api', router);
+app.use(prefix, router);
 
 // START THE SERVER
 // =============================================================================
-app.listen(port);
-console.log('Magic happens on port ' + port);
+app.listen(port, function() {
+	console.log('Magic happens at http://localhost:'+port+prefix+'/');
+});
+
