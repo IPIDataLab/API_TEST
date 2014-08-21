@@ -1,7 +1,7 @@
 API_TEST
 ========
 
-This is a test API deployment for the Providing for Peacekeeping Database. The application is deployed with Node.js server script. The script uses Mongoose to connect to MongoDB locally and define a series of data models. Express.js is used to define the routes used by the api to get data. Roues are a series of GET requests defined below. The API can be access through [server dns]/ppp_api.
+This is a test API deployment for the Providing for Peacekeeping Database. The application is deployed with Node.js server script. The script uses Mongoose to connect to MongoDB locally and define a series of data models. Express.js is used to define the routes used by the api to get data. Routes are a series of GET requests defined below. The API can be access through [server dns]/ppp_api.
 
 *	**ppp_api/aggregates/[contribution type]** returns all monthly aggregates of contributions by type. Data is returned based on contribution type specification as an object array containing "date" and "value" keys with associated values. Dates are retured as YYYY-MM-DD.
 
