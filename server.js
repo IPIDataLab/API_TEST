@@ -39,7 +39,7 @@ router.use(function(req, res, next) {
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
 router.get('/', function(req, res) {
-	res.json({ message: 'hooray! welcome to our api!' });	
+	res.jsonp({ message: 'hooray! welcome to our api!' });	
 });
 
 // test mongoose query route using contribution collection
@@ -94,7 +94,7 @@ router.route('/search')
 
 			Contribution.find({country : {$in : countries}}, function(err, contribution) {
 				if(!err) {
-					res.json(contribution);
+					res.jsonp(contribution);
 				}else{
 					return console.log(err);
 				}
@@ -124,7 +124,7 @@ router.route('/countries/:country_id')
 		req.params.country_id = req.params.country_id.toUpperCase();
 		Country.find(req.params, function(err, country) {
 			if(!err) {
-				res.json(country);
+				res.jsonp(country);
 			}else{
 				return console.log(err);
 			}
@@ -152,7 +152,7 @@ router.route('/contributions/:country')
 		req.params.country = req.params.country.toUpperCase();
 		Contribution.find(req.params, function(err, contribution) {
 			if(!err) {
-				res.json(contribution);
+				res.jsonp(contribution);
 			}else{
 				return console.log(err);
 			}
@@ -184,7 +184,7 @@ router.route('/missions/:mission')
 		req.params.mission = req.params.mission.toUpperCase();
 		Mission.find(req.params, function(err, mission) {
 			if(!err) {
-				res.json(mission);
+				res.jsonp(mission);
 			}else{
 				return console.log(err);
 			}
@@ -196,6 +196,17 @@ router.route('/missions/:mission')
 ///ALL MISSIONS
 /////////////////////////////////////
 
+// define routes for missions collection
+router.route('/aggregates')
+	// get all the missions (accessed at GET http://localhost:8080/ppp_api/missions)
+	.get(function(req, res) {
+		Aggregate.find(function(err, aggregate) {
+			if (err)
+				res.send(err);
+			res.send(aggregate);
+		});
+	});
+
 // Define aggregate route for each type
 // ----------------------------------------------------
 router.route('/aggregates/:cont_type')
@@ -205,7 +216,7 @@ router.route('/aggregates/:cont_type')
 		req.params.cont_type = req.params.cont_type.toLowerCase();
 		Aggregate.find(req.params, function(err, aggregate) {
 			if(!err) {
-				res.json(aggregate);
+				res.jsonp(aggregate);
 			}else{
 				return console.log(err);
 			}
