@@ -203,7 +203,7 @@ router.route('/aggregates')
 		Aggregate.find(function(err, aggregate) {
 			if (err)
 				res.send(err);
-			res.send(aggregate);
+			res.jsonp(aggregate);
 		});
 	});
 
